@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Новости</title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <h4 align="center">Добро пожаловать <strong>{{ request.user.username }}</strong> на новостную ленту. <br> Вы успешно авторизованы и можете
+        <a href="{% url 'logout' %}">Выйти</a> </h4> <br>
+        <h4>
+            <a href="personal_inf">Данные аккаунта</a>
+        </h4>
+    {% else %}
+        <h4 align="center">Добро пожаловать на новостную ленту. <br>Для того чтобы оставлять комментарии,
+            <a href="{% url 'login' %}">Войдите</a> или <a href="{% url 'register' %}">Зарегистрируйтесь</a> </h4>
+    {% endif %}
+    <h4 align="right"><a href="/admin">админка</a></h4>
+    <h4><a href="{% url 'news_list' %}">Список новостей</a></h4>
+{#{% lorem 3 p %}#}
+</body>
+</html>

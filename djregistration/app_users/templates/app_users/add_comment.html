@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить комментарий</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+            <div>
+                {{ form.text.errors }}
+                <label for="text">Комментарий:</label>
+                {{ form.text }}
+            </div>
+        <button type="submit">Опубликовать</button>
+    </form>
+
+    {% for i in form.errors %}
+        {{i}}
+    {% endfor %}
+    {% if form.errors %}
+        error!
+    {% endif %}
+
+</body>
+</html>

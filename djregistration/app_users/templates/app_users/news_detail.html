@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Объявление</title>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <h4>{{ object.title }}</h4>
+            <p>{{ object.description }}</p>
+             <p align="right">
+                <a href="{% url  'edit_news' object.id %}"> Редактировать </a>
+            </p>
+            <p>Опубликовал {{ object.user }}</p>
+            <p>Дата создания {{ object.create_at}}</p>
+            <p>Теги:  {{ object.metatag1}} {{ object.metatag2}} {{ object.metatag3}}</p>
+        </div>
+    </div>
+    {% for i in comment_list %}
+        <ul>
+            <li>
+                {% if i.user == None %}
+                    <i>Аноним</i>
+                {% else %}
+                    <i> {{i.user}} </i>
+                {% endif %}
+                <p>{{ i.text }}</p>
+            </li>
+        </ul>
+    {% endfor %}
+    <form action="add_comment">
+        <button class="btn-primary btn-block">Добавить комментарий</button>
+    </form>
+
+    <br>
+    <a href="/news" align="center">
+       <h6>Назад</h6>
+    </a>
+    <a href="/" align="center">
+       <h6>На Главную</h6>
+    </a>
+
+</body>
+</html>

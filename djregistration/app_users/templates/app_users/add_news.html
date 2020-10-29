@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить новость</title>
+</head>
+<body>
+    <form action="{% url 'add_news' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="text">Заголовок:</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+        </div>
+        <div>
+            <label for="news">Текст:</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+        <div>
+            <label for="тег">Теги:</label>
+            {{ form.metatag }}
+            {{ form.metatag.errors }}
+        </div>
+        <br>
+        <input type="submit" value="Отправить"></td>
+    </form>
+
+</body>
+</html>

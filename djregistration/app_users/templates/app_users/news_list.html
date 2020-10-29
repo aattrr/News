@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Новости</title>
+</head>
+<body>
+
+<div class="row">
+    <div class="col-2">
+        {% for i in cloud_tags %}
+            <h4>
+                <a href="{% url 'news_filter' i.id %}">{{ i.descriptor }} </a>
+            </h4>
+        {% endfor %}
+    </div>
+
+    <div class="col-10">
+       {% for i in object_list %}
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    <a href="{{ i.get_absolute_url }}"> {{ i.title }} </a>
+                </h4>
+                <p> {{ i.description }} </p>
+            </div>
+        </div>
+        {% empty %}
+            <h3> В данный момент новости отсутсвуют </h3>
+        {% endfor %}
+        <form action="add_news">
+            <button class="btn-primary btn-block btn-lg">Добавить новость</button>
+        </form>
+        <a href="/" align="center">
+           <h6>На Главную</h6>
+        </a>
+    </div>
+</div>
+
+
+</div>
+
+
+</body>
+</html>
