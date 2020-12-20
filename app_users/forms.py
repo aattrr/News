@@ -1,13 +1,14 @@
 from django import forms
-from app_users.models import News, Comment, Metatag, Picture
-
+from app_users.models import News, Comment,  Picture
+# Metatag,
 
 class NewsForm(forms.ModelForm):
 
     class Meta:
         model = News
-        fields = ['title', 'description', 'status', 'metatag']
-        metatag = forms.ModelMultipleChoiceField(queryset=Metatag.objects.all(), required=False)
+        # fields = ['title', 'description', 'status', 'metatag']
+        fields = ['title', 'description', 'status']
+        # metatag = forms.ModelMultipleChoiceField(queryset=Metatag.objects.all(), required=False)
 
 
 class PictureForm(forms.ModelForm):

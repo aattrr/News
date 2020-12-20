@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import News, Comment, Profile, Metatag, Picture
+from .models import News, Comment, Profile, Picture
 
 
-@admin.register(Metatag)
-class MetatagAdmin(admin.ModelAdmin):
-    list_display = ['descriptor']
+# @admin.register(Metatag)
+# class MetatagAdmin(admin.ModelAdmin):
+#     list_display = ['descriptor']
 
 
 class CommentInLine(admin.TabularInline):

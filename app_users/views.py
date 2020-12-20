@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView
-from app_users.models import News, Comment, User, Profile, Metatag, Picture
+from app_users.models import News, Comment, User, Profile, Picture
 from .forms import CommentForm, NewsForm, PictureForm
 
 
@@ -13,21 +13,21 @@ class NewsList(ListView):
         """Переопределение метода get_context_data для сортировки по созданию активных объявлений"""
         context = super(NewsList, self).get_context_data(**kwargs)
         context['object_list'] = News.objects.filter(status=True).order_by('-create_at')
-        context['cloud_tags'] = Metatag.objects.all
+        # context['cloud_tags'] = Metatag.objects.all
         return context
 
 
-class NewsFilter(ListView):
-    """Фильтрация новостей по тегу"""
-    model = News
-    template_name = 'app_users/filter_news.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(NewsFilter, self).get_context_data(**kwargs)
-        select_tag = Metatag.objects.get(id=self.kwargs['pk'])  # Выбраннный тег
-        context['filtered_news'] = News.objects.filter(metatag=select_tag).order_by('-create_at')   # Новости выбранного тега
-        context['select_tag'] = select_tag
-        return context
+# class NewsFilter(ListView):
+#     """Фильтрация новостей по тегу"""
+#     model = News
+#     template_name = 'app_users/filter_news.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(NewsFilter, self).get_context_data(**kwargs)
+#         select_tag = Metatag.objects.get(id=self.kwargs['pk'])  # Выбраннный тег
+#         context['filtered_news'] = News.objects.filter(metatag=select_tag).order_by('-create_at')   # Новости выбранного тега
+#         context['select_tag'] = select_tag
+#         return context
 
 
 class NewsDetail(DetailView):

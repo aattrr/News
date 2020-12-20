@@ -5,18 +5,18 @@ from django.contrib.auth.models import User
 
 
 
-class Metatag(models.Model):
-    """ Модель тегов, указываемых для новостей """
-    descriptor = models.CharField(max_length=21, verbose_name='тэги', null=True, blank=True)
-
-    def __str__(self):
-        return self.descriptor
+# class Metatag(models.Model):
+#     """ Модель тегов, указываемых для новостей """
+#     descriptor = models.CharField(max_length=21, verbose_name='тэги', null=True, blank=True)
+#
+#     def __str__(self):
+#         return self.descriptor
 
 
 class News(models.Model):
     """ Модель новостей """
     user = models.ForeignKey(User, max_length=100, on_delete=models.CASCADE, null=True, blank=True)
-    metatag = models.ManyToManyField(Metatag, max_length=21, null=True, blank=True)
+    # metatag = models.ManyToManyField(Metatag, max_length=21, null=True, blank=True)
     title = models.CharField(max_length=150, verbose_name='название')
     description = models.TextField(verbose_name='содержание')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
