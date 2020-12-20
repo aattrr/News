@@ -44,8 +44,8 @@ class NewsDetail(DetailView):
 
 
 def create_news(request):
-    if not request.user.has_perm('app_users.add_news'):     # имеет ли пользователь, разрешение на создание новости
-        raise PermissionDenied()
+    # if not request.user.has_perm('app_users.add_news'):     # имеет ли пользователь, разрешение на создание новости
+    #     raise PermissionDenied()
     if request.method == 'POST':
         picture_form = PictureForm(request.POST, request.FILES)
         news_form = NewsForm(request.POST)
