@@ -62,8 +62,10 @@ class PersonalInf(TemplateView):
     def get_context_data(self, **kwargs):
         """Получаем колличество опубликованных новостей"""
         context = super(PersonalInf, self).get_context_data(**kwargs)
-        select_user = News.objects.filter(user=self.request.user)
-        context['count_news'] = select_user.count()
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            select_user = News.objects.filter(user=current_user)
+            context['count_news'] = select_user.count()
         return context
 
 
@@ -98,3 +100,19 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'djfiles/register.html', {'form': form})
+
+
+def about(request):
+    """Страница О нас"""
+    context = {
+        'about_text': 'Сайт создан в ознакомительных целях для оценки профессиональных способностей'
+    }
+    return render(request, 'djfiles/about.html', context=context)
+
+
+def contact(request):
+    """Страница Контакты"""
+    context = {
+        'contact_text': 'Страница контактов'
+    }
+    return render(request, 'djfiles/contact.html', context=context)

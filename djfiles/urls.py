@@ -15,6 +15,8 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
     path('load_file/', load_file, name='load_file'),
+    path('about/', about, name='about'),
+    path('contact/', contact, name='contact'),
 ]\
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
