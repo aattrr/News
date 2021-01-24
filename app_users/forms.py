@@ -7,18 +7,26 @@ class NewsForm(forms.ModelForm):
     class Meta:
         model = News
         # fields = ['title', 'description', 'status', 'metatag']
-        fields = ['title', 'description', 'status']
         # metatag = forms.ModelMultipleChoiceField(queryset=Metatag.objects.all(), required=False)
-
+        fields = ['title', 'description', 'status']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'mb-0', 'type': 'text'}),
+            'description': forms.Textarea(attrs={'class': 'mb-0', 'type': 'text'})
+        }
 
 class PictureForm(forms.ModelForm):
+    image = forms.ImageField(widget=forms.ClearableFileInput(
+        attrs={'multiple': True, 'class': 'mb-0', 'type': 'file', 'placeholder': 'Изображения'}))
+
 
     class Meta:
         model = Picture
         fields = ['image']
-        widgets = {
-            'image': forms.ClearableFileInput(attrs={'multiple': True})
-        }
+        # widgets = {
+        #     'image': forms.ClearableFileInput(
+        #         attrs={'multiple': True, 'class': 'mb-0', 'type': 'file', 'placeholder': 'Изображения'}
+        #     )
+        # }
 
 
 class CommentForm(forms.ModelForm):

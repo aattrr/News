@@ -21,7 +21,7 @@
                                 {% empty %}
                                     <h3> В данный момент новости отсутсвуют </h3>
                                 {% endfor %}
-                                <a href="add_news" class="default-btn">Добавить новость</a>
+                                <a href="{% url "add_news" %}" class="default-btn">Добавить новость</a>
                             </div>
                         </div>
                     </div>

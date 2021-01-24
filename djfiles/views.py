@@ -1,6 +1,6 @@
 from _csv import reader
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate, login
@@ -11,22 +11,23 @@ from .forms import RegisterForm, ChangeUserForm, UploadFileForm
 
 def load_file(request):
     """Загрузка .csv файла и сохранение в базу заголовка новости, описания и текущего пользователя"""
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            data_file = form.cleaned_data['file'].read()
-            data_str = data_file.decode('utf-8').split('\n')
-            csv_reader = reader(data_str, delimiter=",", quotechar='"')
-            for row in csv_reader:
-                News.objects.create(title=row[0], description=row[1], user=request.user)
-            return HttpResponse(content='Данные обновленны', status=200)
-    else:
-        form = UploadFileForm()
-
-    context = {
-        'form': form
-    }
-    return render(request, 'djfiles/upload_file.html', context=context)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                data_file = form.cleaned_data['file'].read()
+                data_str = data_file.decode('utf-8').split('\n')
+                csv_reader = reader(data_str, delimiter=",", quotechar='"')
+                for row in csv_reader:
+                    News.objects.create(title=row[0], description=row[1], user=request.user)
+                return HttpResponse(content='Данные обновлены', status=200)
+        else:
+            form = UploadFileForm()
+            context = {
+                'form': form
+            }
+            return render(request, 'djfiles/upload_file.html', context=context)
+    return render(request, 'djfiles/upload_file.html')
 
 
 class UserLoginView(LoginView):
@@ -35,15 +36,19 @@ class UserLoginView(LoginView):
 
 def edit_profile(request):
     """Редактирование пользователя"""
-    profile_data = get_object_or_404(Profile, user=request.user)
-    if request.method == 'POST':
-        form = ChangeUserForm(request.POST, instance=profile_data)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
+    if request.user.is_authenticated:
+        profile_data = Profile.objects.get(user=request.user)
+        # profile_data = get_object_or_404(Profile, user=request.user)
+        if request.method == 'POST':
+            form = ChangeUserForm(request.POST, instance=profile_data)
+            if form.is_valid():
+                form.save()
+                return redirect('/')
+        else:
+            form = ChangeUserForm(instance=profile_data)
+        return render(request, 'djfiles/edit_profile.html', {"form": form})
     else:
-        form = ChangeUserForm(instance=profile_data)
-    return render(request, 'djfiles/edit_profile.html', {"form": form})
+        return render(request, 'djfiles/edit_profile.html')
 
 
 class UserLogoutView(LogoutView):

@@ -46,48 +46,50 @@ class NewsDetail(DetailView):
 def create_news(request):
     # if not request.user.has_perm('app_users.add_news'):     # имеет ли пользователь, разрешение на создание новости
     #     raise PermissionDenied()
-    if request.method == 'POST':
-        picture_form = PictureForm(request.POST, request.FILES)
-        news_form = NewsForm(request.POST)
-        if picture_form.is_valid() and news_form.is_valid():
-            news_f = news_form.save(commit=False)
-            news_f.user = request.user      # Сохраняем текущего пользователя
-            news_f.save()
-            news_id = news_f.id     # Получаем id вновь созданной новости
-            news = News.objects.get(id=news_id)
-            files = request.FILES.getlist('image')  # Получаем все загруженные файлы
-            for f in files:
-                instance = Picture(news=news, image=f)
-                instance.save()
-            return redirect('news_list')
-    else:
-        context = {
-            'news_form': NewsForm(),
-            'picture_form': PictureForm(),
-        }
-    return render(request, 'app_users/add_news.html', context)
-
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            picture_form = PictureForm(request.POST, request.FILES)
+            news_form = NewsForm(request.POST)
+            if picture_form.is_valid() and news_form.is_valid():
+                news_f = news_form.save(commit=False)
+                news_f.user = request.user      # Сохраняем текущего пользователя
+                news_f.save()
+                news_id = news_f.id     # Получаем id вновь созданной новости
+                news = News.objects.get(id=news_id)
+                files = request.FILES.getlist('image')  # Получаем все загруженные файлы
+                for f in files:
+                    instance = Picture(news=news, image=f)
+                    instance.save()
+                return redirect('news_detail', news_id)
+        else:
+            context = {
+                'news_form': NewsForm(),
+                'picture_form': PictureForm(),
+            }
+            return render(request, 'app_users/add_news.html', context)
+    return render(request, 'app_users/add_news.html')
 
 def edit_news(request, pk):
     """Редактирование Новости"""
-    news_data = News.objects.get(pk=pk)  # Изменяемая новость
-    picture_data = Picture.objects.filter(news=news_data)  # И все её картинки
-    if request.method == 'POST':
-        news_form = NewsForm(request.POST, instance=news_data)
-        if news_form.is_valid():
-            news_form.save()
-            return redirect('news_list')
-    else:
-        context = {
-            'news_form': NewsForm(instance=news_data),
-            'object': picture_data,
-        }
-    return render(request, 'app_users/edit_news.html', context)
-
+    if request.user.is_authenticated:
+        news_data = News.objects.get(pk=pk)  # Изменяемая новость
+        picture_data = Picture.objects.filter(news=news_data)  # И все её картинки
+        if request.method == 'POST':
+            news_form = NewsForm(request.POST, instance=news_data)
+            if news_form.is_valid():
+                news_form.save()
+                return redirect('news_detail', pk)
+        else:
+            context = {
+                'news_form': NewsForm(instance=news_data),
+                'object': picture_data,
+                'pk': pk
+            }
+        return render(request, 'app_users/edit_news.html', context)
+    return render(request, 'app_users/edit_news.html')
 
 def delete_picture(request, pk):
     """Удаление картинок из редактируемой новости"""
-
     # Получаем из checkboxa список id-шников выбранных к удалению картинок
     if request.method == 'POST':
         picture_form = request.POST.getlist('checks')
@@ -95,8 +97,9 @@ def delete_picture(request, pk):
             for pic in picture_form:
                 select_picture = Picture.objects.get(id=pic)
                 select_picture.delete()
-                # return HttpResponse(content='Изображение удалены', status=200)
-                return render(request, 'app_users/edit_news.html', pk)
+            return redirect('edit_news', pk)
+        else:
+            return redirect('edit_news', pk)
 
 
 class CreateComment(CreateView):
@@ -112,9 +115,9 @@ class CreateComment(CreateView):
             new_comment.news = news
             new_comment.user = user
             new_comment.save()
-            return redirect('news_list')
+            return redirect('news_detail', self.kwargs['pk'])
         else:
             new_comment = form.save(commit=False)
             new_comment.news = news
             new_comment.save()
-            return redirect('news_list')
+            return redirect('news_detail', self.kwargs['pk'])
